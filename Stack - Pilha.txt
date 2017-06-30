@@ -1,0 +1,3 @@
+http://www.cprogressivo.net/2014/05/Pilhas-Stack-em-C-O-Que-E-Como-Implementar-Tutorial-C-Estrutura-de-Dados.html
+
+http://linguagemc.com.br/valores-aleatorios-em-c-com-a-funcao-rand/
