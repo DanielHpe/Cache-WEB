@@ -15,7 +15,7 @@ typedef struct{
 
 typedef struct{
 	pagina info;
-	struct t_pilha *prox, *ant;
+	struct t_pilha *prox;
 } t_pilha;
 
 
@@ -119,40 +119,27 @@ void historicoLRU(pagina info){
 	
 	bool existencia;
 	int achou;
-	int cont = 0; //Contador para contar o número de elementos da Pilha
+	int cont; //Contador para contar o número de elementos da Pilha
 	t_pilha *elemento = malloc(sizeof(t_pilha)); //Alocando memória
-	t_pilha *aux = malloc(sizeof(t_pilha));
 	t_pilha *antecessor = malloc(sizeof(t_pilha));
-	
-	aux = topo;
+
 	elemento->info = info; //Ponteiro elemento do tipo t_pilha recebe info (dados)
 	elemento->prox = topo; //Ponteiro prox de elemento aponta para o topo (Que caso, a lista esteja vazia, aponta para NULL)
 	topo = elemento; //Topo aponta para elemento (Que se tornará o topo da pilha)
 
 	printf("\nElemento inserido com sucesso!"); 
 	
-	if (aux == NULL) //se o ponteiro aux apontar para nulo
-	{
-		printf("\n Pilha vazia! \n");
-	    getch();
-	    return;
-	}
-	
-	while (aux->prox != NULL) {
-		antecessor = aux;
-		aux = aux->prox;
-		if (!strcmp(aux->info.titulo, elemento->info.titulo)) { // achou o nó
-			achou = 1;
+	while (elemento->prox != NULL) {
+		antecessor = elemento;
+		elemento = elemento->prox;
+		if (!strcmp(topo->info.url, elemento->info.url)) { // achou o nó
+			antecessor->prox = elemento->prox;
+			free(elemento);	
 			break;
 		}
 	}
 	
-	if(achou) 
-	{	
-		antecessor->prox = aux->prox;
-		topo = aux;
-		getch();
-	}
+	removerLRU();
 
 	printf("\n\n");
 	system("pause");
@@ -161,13 +148,37 @@ void historicoLRU(pagina info){
 }
 
 
-void organizarLRU(){
-
+void removerLRU(){
 	
-}
-
-void organizarLFU(){
+	t_pilha *aux = malloc(sizeof(t_pilha));
+	t_pilha *controle = malloc(sizeof(t_pilha));
+	t_pilha *antecessor = malloc(sizeof(t_pilha));
+	int cont = 0;
+	int pos_min = 0;
 	
+	aux = topo;
+	controle = topo;
+	
+	while (aux != NULL){
+		cont++;
+		aux = aux->prox;
+		if(cont == 4){
+			while(controle->prox != NULL){
+				antecessor = controle;
+				controle = controle->prox;
+				if(controle->info.data < antecessor->info.data){
+					antecessor->prox = controle->prox;
+					break;
+				}	
+			}
+			free(controle);
+			printf("\nElemento removido com sucesso!");
+		}
+		
+		printf("\n\n");
+		system("pause");
+		system("cls");	
+	}
 }
 
 void exibirLRU(){
@@ -183,6 +194,7 @@ void exibirLRU(){
 		printf(" URL: %s\n", aux->info.url);
 		printf(" Tempo.: %d\n", aux->info.data);
 		printf(" Acessos.: %d", aux->info.qtdAcesso);
+		printf("\n");
 		aux = aux->prox; //Aponta pro proximo elemento
 	}
 	
