@@ -18,7 +18,7 @@ typedef struct{
 	struct t_pilha *prox;
 } t_pilha;
 
-
+t_pilha *top;
 t_pilha *topo;
 pagina dados;
 
@@ -32,7 +32,7 @@ int menu (){
 	printf("3 - Listar Historico LFU \n");
 	printf("4 - Limpar Historicos \n");
 	printf("5 - Sair \n\n");
-	printf("Digite a opcao desejada ");
+	printf("Digite a opcao desejada: ");
 	scanf("%d", &opcao);
 	printf("\n");
 	system("pause");
@@ -48,6 +48,11 @@ int vazia(){
 void inicializaPilha(){
 	topo = malloc(sizeof(t_pilha));
 	topo = NULL;
+}
+
+void inicializaStack(){
+	top = malloc(sizeof(t_pilha));
+	top = NULL;
 }
 
 double retorna_tempo(){
@@ -73,6 +78,7 @@ void lerDados(){
 	gets(dados.titulo);
 	printf(" URL da pagina: ");
 	fflush(stdin);
+	printf("www.");
 	gets(dados.url);
 	printf(" Tempo de acesso: ");
 	dados.data = retorna_tempo();
@@ -127,7 +133,7 @@ void historicoLRU(pagina info){
 	elemento->prox = topo; //Ponteiro prox de elemento aponta para o topo (Que caso, a lista esteja vazia, aponta para NULL)
 	topo = elemento; //Topo aponta para elemento (Que se tornará o topo da pilha)
 
-	printf("\nElemento inserido com sucesso!"); 
+	printf("\nElemento inserido com sucesso!\n"); 
 	
 	while (elemento->prox != NULL) {
 		antecessor = elemento;
@@ -153,13 +159,14 @@ void removerLRU(){
 	t_pilha *aux = malloc(sizeof(t_pilha));
 	t_pilha *controle = malloc(sizeof(t_pilha));
 	t_pilha *antecessor = malloc(sizeof(t_pilha));
+	t_pilha *auxiliar = malloc(sizeof(t_pilha));
 	int cont = 0;
-	int pos_min = 0;
+	int contador = 1;
 	
 	aux = topo;
 	controle = topo;
 	
-	while (aux != NULL){
+	/* while (aux != NULL){
 		cont++;
 		aux = aux->prox;
 		if(cont == 4){
@@ -178,26 +185,114 @@ void removerLRU(){
 		printf("\n\n");
 		system("pause");
 		system("cls");	
+	} */
+	
+	while(aux != NULL){
+		cont++;
+		aux = aux->prox;
+		if(cont == 11){
+			while (controle->prox != NULL){
+				antecessor = controle;
+				controle = controle->prox;
+			}
+			
+			antecessor->prox = controle->prox;
+			free(controle);
+			
+		}
+	} 
+	
+	if(cont > 10){
+		
+		printf("\n++++++ ELEMENTO REMOVIDO ++++++\n");
+		
+		printf("\n Id.: %d\n", controle->info.id);
+		printf(" Titulo.: %s\n", controle->info.titulo);
+		printf(" URL: www.%s\n", controle->info.url);
+		printf(" Tempo.: %d\n", controle->info.data);
+		printf(" Acessos.: %d", controle->info.qtdAcesso);
+		printf("\n");
+		
 	}
+}
+
+void limparPilha(){
+	
+	t_pilha *aux = malloc(sizeof(t_pilha));
+	
+	/* if(topo == NULL){
+		printf("\n\nPilha Vazia !");
+		return;
+	}
+	else{
+		aux = topo;
+		topo = topo->prox;
+	} */
+	
+	while(topo != NULL){
+		aux = topo;
+		topo = topo->prox;
+		free(aux);
+	}
+	
+	printf("\n\nPilha Destruida");
+	
+	printf("\n\n");
+	system("pause");
+	system("cls");	
+	
 }
 
 void exibirLRU(){
 	
 	t_pilha *aux = topo;
-	
-	printf("\n++++++ TODOS OS ELEMENTOS ++++++\n");
+	t_pilha *auxx = top;
 	 
-	while (aux != NULL) 
-	{
-		printf("\n Id.: %d\n", aux->info.id);
-		printf(" Titulo.: %s\n", aux->info.titulo);
-		printf(" URL: %s\n", aux->info.url);
-		printf(" Tempo.: %d\n", aux->info.data);
-		printf(" Acessos.: %d", aux->info.qtdAcesso);
-		printf("\n");
-		aux = aux->prox; //Aponta pro proximo elemento
+	if(aux == NULL){
+		printf("Pilha Vazia\n\n");
+		printf("\n\n");
+		system("pause");
+		system("cls");
+		return;
+	}
+	else{
+		
+		printf("\n++++++ TODOS OS ELEMENTOS ++++++\n");
+						
+		while (aux != NULL) 
+		{
+			printf("\n Id.: %d\n", aux->info.id);
+			printf(" Titulo.: %s\n", aux->info.titulo);
+			printf(" URL: www.%s\n", aux->info.url);
+			printf(" Tempo.: %d\n", aux->info.data);
+			printf(" Acessos.: %d", aux->info.qtdAcesso);
+			printf("\n");
+			aux = aux->prox; //Aponta pro proximo elemento
+		}
+		
 	}
 	
+	/* while (auxx != NULL) 
+	{
+		printf("\n Id.: %d\n", auxx->info.id);
+		printf(" Titulo.: %s\n", auxx->info.titulo);
+		printf(" URL: www.%s\n", auxx->info.url);
+		printf(" Tempo.: %d\n", auxx->info.data);
+		printf(" Acessos.: %d", auxx->info.qtdAcesso);
+		printf("\n");
+		auxx = auxx->prox; //Aponta pro proximo elemento
+	} */
+	
+	/* printf("\n++++++ ELEMENTO ++++++\n");
+	
+	printf("\n Id.: %d\n", antecessor->info.id);
+	printf(" Titulo.: %s\n", antecessor->info.titulo);
+	printf(" URL: www.%s\n", antecessor->info.url);
+	printf(" Tempo.: %d\n", antecessor->info.data);
+	printf(" Acessos.: %d", antecessor->info.qtdAcesso);
+	printf("\n"); */
+	 	
+	 	
 	printf("\n\n");
 	system("pause");
 	system("cls");
@@ -214,6 +309,7 @@ int main(){
 	srand(time(NULL));
 	
 	inicializaPilha();
+	inicializaStack();
 	
 	do{
 		
@@ -231,7 +327,8 @@ int main(){
 			case 3:
 			break;
 			case 4:
-			break;
+				limparPilha();
+				break;
 			default:
 			break;
 		}
