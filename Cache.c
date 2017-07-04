@@ -242,19 +242,6 @@ void historicoLFU(pagina info){
 	
 	// removerLFU(aux);
 	
-	while (aux->prox != NULL) {
-		antecessor = aux;
-		aux = aux->prox;
-		if (!strcmp(top->info.url, aux->info.url)) {   
-			printf(" \nVETOR DE TESTE %d \n", vetor[cont] = vetor[cont] + 1);
-			cont++;
-		}
-		else if(strcmp(top->info.url, aux->info.url)) { 
-			printf(" \nVETOR DE TESTE 2: %d \n", vetor[cont] = 1);
-			cont++;
-		}
-	}
-	
 }
 
 
