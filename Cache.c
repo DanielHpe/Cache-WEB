@@ -18,7 +18,12 @@ typedef struct{
 	struct t_pilha *prox;
 } t_pilha;
 
-t_pilha *top;
+typedef struct{
+	pagina info;
+	struct t_pilha *prox;
+} t_stack;
+
+t_stack *top;
 t_pilha *topo;
 pagina dados;
 
@@ -51,7 +56,7 @@ void inicializaPilha(){
 }
 
 void inicializaStack(){
-	top = malloc(sizeof(t_pilha));
+	top = malloc(sizeof(t_stack));
 	top = NULL;
 }
 
@@ -132,8 +137,6 @@ void historicoLRU(pagina info){
 	elemento->info = info; //Ponteiro elemento do tipo t_pilha recebe info (dados)
 	elemento->prox = topo; //Ponteiro prox de elemento aponta para o topo (Que caso, a lista esteja vazia, aponta para NULL)
 	topo = elemento; //Topo aponta para elemento (Que se tornará o topo da pilha)
-
-	printf("\nElemento inserido com sucesso!\n"); 
 	
 	while (elemento->prox != NULL) {
 		antecessor = elemento;
@@ -147,12 +150,11 @@ void historicoLRU(pagina info){
 	
 	removerLRU();
 
-	printf("\n\n");
-	system("pause");
-	system("cls");		
+//	printf("\n\n");
+//	system("pause");
+//	system("cls");		
 		
 }
-
 
 void removerLRU(){
 	
@@ -216,9 +218,70 @@ void removerLRU(){
 	}
 }
 
+void historicoLFU(pagina info){
+	
+	int contador[15];
+	t_stack *aux = malloc(sizeof(t_stack)); //Alocando memória
+	t_stack *antecessor = malloc(sizeof(t_stack));
+	int vetor[11];
+	int cont = 0;
+
+	aux->info = info; //Ponteiro elemento do tipo t_pilha recebe info (dados)
+	aux->prox = top; //Ponteiro prox de elemento aponta para o topo (Que caso, a lista esteja vazia, aponta para NULL)
+	top = aux; //Topo aponta para elemento (Que se tornará o topo da pilha)
+	
+	/*printf("\n++++++ CONTADORES ++++++\n");
+	
+	while (aux->prox != NULL){
+		antecessor = aux;
+		aux = aux->prox;
+		if(strmcp(topo->info.url, aux->info.url) != 0) /*São Diferentes  {
+			aux->info.qtdAcesso = 1;
+		}
+	} */
+	
+	// removerLFU(aux);
+	
+	while (aux->prox != NULL) {
+		antecessor = aux;
+		aux = aux->prox;
+		if (!strcmp(top->info.url, aux->info.url)) {   
+			printf(" \nVETOR DE TESTE %d \n", vetor[cont] = vetor[cont] + 1);
+			cont++;
+		}
+		else if(strcmp(top->info.url, aux->info.url)) { 
+			printf(" \nVETOR DE TESTE 2: %d \n", vetor[cont] = 1);
+			cont++;
+		}
+	}
+	
+}
+
+
+/* void removerLFU(t_stack aux){
+	
+	t_stack *controle = malloc(sizeof(t_stack));
+	t_stack *antecessor = malloc(sizeof(t_pilha));
+	
+	while (aux->prox != NULL) {
+		antecessor = aux;
+		aux = aux->prox;
+		if (!strcmp(top->info.url, aux->info.url)) {   // São iguais
+			printf("VETOR DE TESTE %d", vetor[cont] = vetor[cont] + 1);
+			cont++;
+		}
+		else (strcmp(top->info.url, aux->info.url)) { // São diferentes
+			printf("VETOR DE TESTE 2: %d", vetor[cont] = 1);
+			cont++;
+		}
+	}
+	
+} */
+
 void limparPilha(){
 	
 	t_pilha *aux = malloc(sizeof(t_pilha));
+	t_stack *controller = malloc(sizeof(t_stack));
 	
 	/* if(topo == NULL){
 		printf("\n\nPilha Vazia !");
@@ -235,6 +298,12 @@ void limparPilha(){
 		free(aux);
 	}
 	
+	while(top != NULL){
+		controller = top;
+		top = top->prox;
+		free(controller);
+	}
+	
 	printf("\n\nPilha Destruida");
 	
 	printf("\n\n");
@@ -246,7 +315,6 @@ void limparPilha(){
 void exibirLRU(){
 	
 	t_pilha *aux = topo;
-	t_pilha *auxx = top;
 	 
 	if(aux == NULL){
 		printf("Pilha Vazia\n\n");
@@ -301,6 +369,36 @@ void exibirLRU(){
 
 void exibirLFU(){
 	
+	t_stack *aux = top;
+	 
+	if(aux == NULL){
+		printf("Pilha Vazia\n\n");
+		printf("\n\n");
+		system("pause");
+		system("cls");
+		return;
+	}
+	else{
+		
+		printf("\n++++++ TODOS OS ELEMENTOS ++++++\n");
+						
+		while (aux != NULL) 
+		{
+			printf("\n Id.: %d\n", aux->info.id);
+			printf(" Titulo.: %s\n", aux->info.titulo);
+			printf(" URL: www.%s\n", aux->info.url);
+			printf(" Tempo.: %d\n", aux->info.data);
+			printf(" Acessos.: %d", aux->info.qtdAcesso);
+			printf("\n");
+			aux = aux->prox; //Aponta pro proximo elemento
+		}
+		
+	}
+	
+	printf("\n\n");
+	system("pause");
+	system("cls");
+	
 }
 
 int main(){
@@ -319,13 +417,18 @@ int main(){
 			case 1:
 				lerDados();
 				historicoLRU(dados);
-			//	historicoLFU(dados);
+				historicoLFU(dados);
+				printf("\nElemento inserido com sucesso!\n"); 
+				system("\n");
+				system("pause");
+				system("cls");				
 				break;
 			case 2:
 				exibirLRU();
 				break;
 			case 3:
-			break;
+				exibirLFU();
+				break;
 			case 4:
 				limparPilha();
 				break;
